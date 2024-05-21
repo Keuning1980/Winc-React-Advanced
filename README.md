@@ -1,2 +1,1 @@
-# Winc-React-Advanced
-Winc React Advanced Project 
+# react-advanced
