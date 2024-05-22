@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
+export const EventEditForm = ({ onClose, onUpdateEvents }) => {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
@@ -27,11 +27,12 @@ export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
     startTime: "",
     endTime: "",
     categoryIds: [],
-    createdBy: "", 
+    createdBy: "", // Toevoegen van createdBy veld
   });
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // State voor gebruikers
   const [error, setError] = useState("");
 
+  // Gebruikersgegevens ophalen
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -48,6 +49,7 @@ export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
     fetchUsers();
   }, []);
 
+  // Eventgegevens ophalen
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -64,7 +66,7 @@ export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
           startTime: eventData.startTime,
           endTime: eventData.endTime,
           categoryIds: eventData.categoryIds,
-          createdBy: eventData.createdBy, 
+          createdBy: eventData.createdBy, // Ophalen van createdBy veld
         });
       } catch (error) {
         console.error("Error:", error);
@@ -99,7 +101,7 @@ export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
         },
         body: JSON.stringify({
           ...formData,
-          createdBy: parseInt(formData.createdBy), 
+          createdBy: parseInt(formData.createdBy), // Zorg ervoor dat createdBy een getal is
         }),
       });
 

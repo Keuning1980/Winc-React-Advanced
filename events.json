@@ -66,16 +66,17 @@
       "endTime": "2023-03-09T07:00:00.000Z"
     },
     {
-      "title": "test",
-      "description": "help ",
+      "title": "Test",
+      "description": "Test",
       "image": "https://www.ctvnews.ca/polopoly_fs/1.5118552.1600965663!/httpImage/image.jpg_gen/derivatives/landscape_1020/image.jpg",
-      "location": "schagen",
-      "startTime": "2024-05-21T12:11",
-      "endTime": "2024-05-21T12:12",
+      "location": "anna paulowna ",
+      "startTime": "2024-05-21T10:22",
+      "endTime": "2024-05-21T11:22",
       "categoryIds": [
+        2,
         1
       ],
-      "createdBy": 1,
+      "createdBy": 2,
       "id": 5
     }
   ],

@@ -16,7 +16,6 @@ export const EventEditModal = ({ event, onClose, onUpdateEvents }) => {
   const handleClose = () => {
     setIsOpen(false);
     onClose();
-    onUpdateEvents(); // Call the function to refresh the event data
   };
 
   return (

@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import DeleteButton from "../components/DeleteButton";
 import EditButton from "../components/EditButton";
-import { EventEditModal } from "../components/EventEditModal";
 
 export const EventPage = () => {
   const { eventId } = useParams();
@@ -24,57 +23,71 @@ export const EventPage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State for controlling the modal
   const toast = useToast();
 
-  const fetchEventData = async () => {
-    try {
-      const [eventResponse, categoriesResponse, usersResponse] =
-        await Promise.all([
-          fetch(`http://localhost:3000/events/${eventId}`),
-          fetch("http://localhost:3000/categories"),
-          fetch("http://localhost:3000/users"),
-        ]);
-
-      if (!eventResponse.ok) {
-        throw new Error("Event not found");
-      }
-      if (!categoriesResponse.ok) {
-        throw new Error("Failed to fetch categories");
-      }
-      if (!usersResponse.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const eventData = await eventResponse.json();
-      const categoriesData = await categoriesResponse.json();
-      const usersData = await usersResponse.json();
-
-      const eventCreator = usersData.find(
-        (user) => user.id === eventData.createdBy
-      );
-
-      setEvent(eventData);
-      setCategories(categoriesData);
-      setUser(eventCreator);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchEventData();
+    const fetchEventAndCategoriesAndUser = async () => {
+      try {
+        const [eventResponse, categoriesResponse, usersResponse] =
+          await Promise.all([
+            fetch(`http://localhost:3000/events/${eventId}`),
+            fetch("http://localhost:3000/categories"),
+            fetch("http://localhost:3000/users"),
+          ]);
+
+        if (!eventResponse.ok) {
+          throw new Error("Event not found");
+        }
+        if (!categoriesResponse.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+        if (!usersResponse.ok) {
+          throw new Error("Failed to fetch users");
+        }
+
+        const eventData = await eventResponse.json();
+        const categoriesData = await categoriesResponse.json();
+        const usersData = await usersResponse.json();
+
+        const eventCreator = usersData.find(
+          (user) => user.id === eventData.createdBy
+        );
+
+        setEvent(eventData);
+        setCategories(categoriesData);
+        setUser(eventCreator);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchEventAndCategoriesAndUser();
   }, [eventId]);
 
   const handleEdit = () => {
-    setIsEditModalOpen(true);
-  };
+    // Voeg hier je bewerkingslogica toe
+    // Simuleer een succesvolle of mislukte bewerking
+    const editSuccess = true; // Wijzig dit naar false om een mislukte bewerking te simuleren
 
-  const handleCloseEditModal = () => {
-    setIsEditModalOpen(false);
-    fetchEventData(); // Refresh event data when modal is closed
+    if (editSuccess) {
+      toast({
+        title: "Edit Successful",
+        description: "The event has been successfully edited.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Edit Failed",
+        description: "An error occurred while editing the event.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -128,18 +141,9 @@ export const EventPage = () => {
             <Button colorScheme="teal">Go Back</Button>
           </Link>
           <DeleteButton eventId={eventId} />
-          <Button colorScheme="teal" onClick={handleEdit}>
-            Edit Event
-          </Button>
+          <EditButton eventId={eventId} onEdit={handleEdit} />
         </HStack>
       </VStack>
-      {isEditModalOpen && (
-        <EventEditModal
-          event={event}
-          onClose={handleCloseEditModal}
-          onUpdateEvents={fetchEventData}
-        />
-      )}
     </Box>
   );
 };
