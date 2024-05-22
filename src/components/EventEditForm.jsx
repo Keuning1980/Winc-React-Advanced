@@ -134,7 +134,10 @@ export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "";
-    return date.toISOString().slice(0, 16); // Format to 'YYYY-MM-DDTHH:MM'
+
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().slice(0, 16); // Format to 'YYYY-MM-DDTHH:MM'
   };
 
   return (
@@ -233,8 +236,3 @@ export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
 };
 
 export default EventEditForm;
-
-
-
-
-
