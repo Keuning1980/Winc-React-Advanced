@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export const EventEditForm = ({ onClose, onUpdateEvents }) => {
+export const EventEditForm = ({ event, onClose, onUpdateEvents }) => {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
@@ -27,12 +27,11 @@ export const EventEditForm = ({ onClose, onUpdateEvents }) => {
     startTime: "",
     endTime: "",
     categoryIds: [],
-    createdBy: "", // Toevoegen van createdBy veld
+    createdBy: "",
   });
-  const [users, setUsers] = useState([]); // State voor gebruikers
+  const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
 
-  // Gebruikersgegevens ophalen
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -49,7 +48,6 @@ export const EventEditForm = ({ onClose, onUpdateEvents }) => {
     fetchUsers();
   }, []);
 
-  // Eventgegevens ophalen
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -63,10 +61,10 @@ export const EventEditForm = ({ onClose, onUpdateEvents }) => {
           description: eventData.description,
           image: eventData.image,
           location: eventData.location,
-          startTime: eventData.startTime,
-          endTime: eventData.endTime,
+          startTime: formatDateTimeLocal(eventData.startTime),
+          endTime: formatDateTimeLocal(eventData.endTime),
           categoryIds: eventData.categoryIds,
-          createdBy: eventData.createdBy, // Ophalen van createdBy veld
+          createdBy: eventData.createdBy,
         });
       } catch (error) {
         console.error("Error:", error);
@@ -101,7 +99,7 @@ export const EventEditForm = ({ onClose, onUpdateEvents }) => {
         },
         body: JSON.stringify({
           ...formData,
-          createdBy: parseInt(formData.createdBy), // Zorg ervoor dat createdBy een getal is
+          createdBy: parseInt(formData.createdBy),
         }),
       });
 
@@ -130,6 +128,13 @@ export const EventEditForm = ({ onClose, onUpdateEvents }) => {
         isClosable: true,
       });
     }
+  };
+
+  const formatDateTimeLocal = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+    return date.toISOString().slice(0, 16); // Format to 'YYYY-MM-DDTHH:MM'
   };
 
   return (
@@ -228,4 +233,8 @@ export const EventEditForm = ({ onClose, onUpdateEvents }) => {
 };
 
 export default EventEditForm;
+
+
+
+
 
